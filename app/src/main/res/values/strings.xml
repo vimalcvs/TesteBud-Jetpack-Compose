@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TesteBud</string>
+    <string name="play_to_learn">Play to learn</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="true">@string/app_name</string>
+    <string name="fcm_message">FCM Message</string>
+
+</resources>
