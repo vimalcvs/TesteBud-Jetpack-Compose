@@ -16,14 +16,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,7 +54,7 @@ class ActivityNotification : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TesteBudTheme {
-                FragmentNotificationScreen()
+                FragmentNotificationScreen(onBackClick = { finish() })
             }
         }
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
@@ -55,15 +65,31 @@ class ActivityNotification : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FragmentNotificationScreen() {
+fun FragmentNotificationScreen(onBackClick: () -> Unit) {
+
     val viewModel: ViewModelRoom = viewModel()
 
     val notification by viewModel.allNotifications.collectAsState(initial = emptyList())
     val isEmpty by viewModel.isEmptyNotification.collectAsState(initial = false)
 
-
     Column {
+        TopAppBar(
+            title = {
+                Text(
+                    text = "Notification",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            },
+            navigationIcon = {
+                IconButton(onClick = { onBackClick() }) {
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = "Back")
+                }
+            },
+        )
         when {
             isEmpty -> EmptyView()
             else -> {
@@ -116,18 +142,10 @@ fun ListItemNotification(item: ModelNotification) {
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun FragmentNotificationPreview() {
     TesteBudTheme {
-        ListItemCategory(
-            item = ModelCategory(
-                "1",
-                "strCategory",
-                "strCategoryDescription",
-                "strCategoryThumb"
-            )
-        )
+        FragmentNotificationScreen(onBackClick = {})
     }
 }

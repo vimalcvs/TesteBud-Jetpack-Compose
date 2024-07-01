@@ -17,8 +17,8 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
 
     private val apiService: ApiService by lazy { RetrofitClient.createAPI(application) }
 
-    private val _data = MutableLiveData<Map<String, List<ModelMeal>>>()
-    val data: LiveData<Map<String, List<ModelMeal>>> = _data
+    private val _data = MutableLiveData<List<ModelMeal>>()
+    val data: LiveData<List<ModelMeal>> = _data
 
     private val _detail = MutableLiveData<List<ModelDetail>>()
     val detail: LiveData<List<ModelDetail>> = _detail
@@ -26,10 +26,8 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
     private val _search = MutableLiveData<List<ModelMeal>>()
     val search: LiveData<List<ModelMeal>> = _search
 
-
     private val _categories = MutableLiveData<List<ModelCategory>>()
     val categories: LiveData<List<ModelCategory>> = _categories
-
 
     private val _breakfast = MutableLiveData<List<ModelMeal>>()
     val breakfast: LiveData<List<ModelMeal>> = _breakfast
@@ -63,21 +61,19 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
     val isEmpty: LiveData<Boolean> = _isEmpty
 
 
-    fun fetchData(category: String?) {
+    fun fetchData(mealType: String) {
         _isLoading.value = true
         _isNoNetwork.value = false
         _isEmpty.value = false
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val response = apiService.getRecipe(category!!)
+                val response = apiService.getRecipe(mealType)
                 if (response.isSuccessful) {
-                    val newData = response.body()?.meals ?: emptyList()
-                    if (newData.isEmpty()) {
+                    val meals = response.body()?.meals
+                    if (meals.isNullOrEmpty()) {
                         _isEmpty.postValue(true)
                     } else {
-                        val currentData = _data.value?.toMutableMap() ?: mutableMapOf()
-                        currentData[category] = newData
-                        _data.postValue(currentData)
+                        _data.postValue(response.body()?.meals)
                     }
                 } else {
                     _isNoNetwork.postValue(true)

@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +34,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vimalcvs.testebud.R
+import com.vimalcvs.testebud.theme.TesteBudTheme
 
 @Immutable
 class BottomEndRoundedShape(private val radius: Float) : Shape {
@@ -71,7 +80,7 @@ class BottomEndRoundedShape(private val radius: Float) : Shape {
 
 @Composable
 fun FragmentBoardingOne(
-    modifier: Modifier = Modifier,
+
     navController: NavController
 ) {
     val configuration = LocalConfiguration.current
@@ -79,18 +88,18 @@ fun FragmentBoardingOne(
     val screenWidth = configuration.screenWidthDp.dp
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
     ) {
         val imageHeight = remember { (screenHeight * 0.6f) }
 
         Column(
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Image(
                 painter = painterResource(id = R.drawable.food_boarding_one),
                 contentDescription = "Food image",
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(imageHeight)
                     .clip(BottomEndRoundedShape(400f)),
@@ -98,23 +107,23 @@ fun FragmentBoardingOne(
             )
 
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp)
                     .height(imageHeight)
             ) {
-                Spacer(modifier = modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(35.dp))
                 Text(
                     text = "Translate in Real Time",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
                     text = "Translate your text quickly and easily with our real-time translator. " +
@@ -123,19 +132,19 @@ fun FragmentBoardingOne(
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
 
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                 ) {
                     repeat(3) {
                         Box(
-                            modifier = modifier
+                            modifier = Modifier
                                 .padding(horizontal = 4.dp)
                                 .size(10.dp)
                                 .clip(MaterialTheme.shapes.small)
@@ -144,25 +153,34 @@ fun FragmentBoardingOne(
                     }
                 }
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
             }
         }
 
         Button(
             onClick = { navController.navigate("boardingTwo") },
-            modifier = modifier
+            modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
-            Text(
-                text = "Get Started",
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                fontStyle = FontStyle.Normal
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    text = "Get Started",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    fontWeight = FontWeight.Normal,
+                )
+                WelcomeArrowAnimation()
+            }
         }
     }
 }
@@ -170,25 +188,25 @@ fun FragmentBoardingOne(
 
 @Composable
 fun FragmentBoardingTwo(
-    modifier: Modifier = Modifier,
+
     navController: NavController
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
     ) {
         val imageHeight = remember { (screenHeight * 0.6f) }
 
         Column(
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Image(
                 painter = painterResource(id = R.drawable.food_boarding_two),
                 contentDescription = "Food image",
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(imageHeight)
                     .clip(BottomEndRoundedShape(400f)),
@@ -196,23 +214,23 @@ fun FragmentBoardingTwo(
             )
 
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp)
                     .height(imageHeight)
             ) {
-                Spacer(modifier = modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(35.dp))
                 Text(
                     text = "Translate in Real Time",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
                     text = "Translate your text quickly and easily with our real-time translator. " +
@@ -221,19 +239,19 @@ fun FragmentBoardingTwo(
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
 
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                 ) {
                     repeat(3) {
                         Box(
-                            modifier = modifier
+                            modifier = Modifier
                                 .padding(horizontal = 4.dp)
                                 .size(10.dp)
                                 .clip(MaterialTheme.shapes.small)
@@ -242,24 +260,33 @@ fun FragmentBoardingTwo(
                     }
                 }
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
             }
         }
         Button(
             onClick = { navController.navigate("boardingThree") },
-            modifier = modifier
+            modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
-            Text(
-                text = "Get Started",
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                fontStyle = FontStyle.Normal
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    text = "Next",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    fontWeight = FontWeight.Normal,
+                )
+                WelcomeArrowAnimation()
+            }
         }
     }
 }
@@ -267,25 +294,26 @@ fun FragmentBoardingTwo(
 
 @Composable
 fun FragmentBoardingThree(
-    modifier: Modifier = Modifier,
     navController: NavController
 ) {
+
+
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
     ) {
         val imageHeight = remember { (screenHeight * 0.6f) }
 
         Column(
-            modifier = modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize()
         ) {
             Image(
                 painter = painterResource(id = R.drawable.food_boarding_three),
                 contentDescription = "Food image",
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxWidth()
                     .height(imageHeight)
                     .clip(BottomEndRoundedShape(400f)),
@@ -293,23 +321,23 @@ fun FragmentBoardingThree(
             )
 
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .fillMaxWidth()
                     .padding(start = 20.dp, end = 20.dp)
                     .height(imageHeight)
             ) {
-                Spacer(modifier = modifier.height(35.dp))
+                Spacer(modifier = Modifier.height(35.dp))
                 Text(
                     text = "Translate in Real Time",
                     style = MaterialTheme.typography.headlineLarge,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 Text(
                     text = "Translate your text quickly and easily with our real-time translator. " +
@@ -318,19 +346,19 @@ fun FragmentBoardingThree(
                     fontWeight = FontWeight.Normal,
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
 
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 20.dp)
                 ) {
                     repeat(3) {
                         Box(
-                            modifier = modifier
+                            modifier = Modifier
                                 .padding(horizontal = 4.dp)
                                 .size(10.dp)
                                 .clip(MaterialTheme.shapes.small)
@@ -339,7 +367,7 @@ fun FragmentBoardingThree(
                     }
                 }
 
-                Spacer(modifier = modifier.height(25.dp))
+                Spacer(modifier = Modifier.height(25.dp))
             }
         }
 
@@ -351,20 +379,60 @@ fun FragmentBoardingThree(
                     }
                 }
             },
-            modifier = modifier
+            modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .padding(16.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
-            Text(
-                text = "Get Started",
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.titleMedium,
-                fontStyle = FontStyle.Normal
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    text = "Get Started",
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Center),
+                    fontWeight = FontWeight.Normal,
+                )
+                WelcomeArrowAnimation()
+            }
         }
+    }
+}
+
+
+@Composable
+fun WelcomeArrowAnimation() {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.iap))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier
+                .size(20.dp)
+                .fillMaxWidth()
+                .align(Alignment.CenterEnd),
+        )
+    }
+}
+
+@Preview
+@Composable
+fun FragmentBoardingPreview() {
+    TesteBudTheme {
+        FragmentBoardingThree(navController = rememberNavController())
     }
 }
 

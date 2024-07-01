@@ -20,14 +20,14 @@ fun NavigationHost(modifier: Modifier = Modifier) {
 
     NavHost(navController = navController, startDestination = "boardingOne", builder = {
         composable("boardingOne") {
-            FragmentBoardingOne(modifier, navController)
+            FragmentBoardingOne(navController)
         }
         composable("boardingTwo") {
-            FragmentBoardingTwo(modifier, navController)
+            FragmentBoardingTwo(navController)
         }
 
         composable("boardingThree") {
-            FragmentBoardingThree(modifier, navController)
+            FragmentBoardingThree(navController)
         }
 
         composable("login") {

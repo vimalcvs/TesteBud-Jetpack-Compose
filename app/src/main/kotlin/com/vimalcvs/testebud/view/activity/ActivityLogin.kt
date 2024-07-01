@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -40,12 +41,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -53,6 +57,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.theme.TesteBudTheme
 import com.vimalcvs.testebud.util.NavigationHost
 import com.vimalcvs.testebud.viewmodel.AuthState
@@ -85,13 +91,15 @@ fun FragmentLogin(
     authViewModel: AuthViewModel
 ) {
 
+
     var email by remember {
-        mutableStateOf("")
+        mutableStateOf("demo@demo.com")
     }
 
     var password by remember {
-        mutableStateOf("")
+        mutableStateOf("123456")
     }
+
 
     var passwordVisible by remember {
         mutableStateOf(false)
@@ -132,10 +140,24 @@ fun FragmentLogin(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(top = 50.dp),
+            .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_placeholder_male),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+
             Text(
                 text = "Sign In",
                 style = MaterialTheme.typography.headlineLarge,
@@ -149,6 +171,7 @@ fun FragmentLogin(
 
             OutlinedTextField(
                 value = email,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
                 onValueChange = {
                     email = it
                     emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -172,6 +195,7 @@ fun FragmentLogin(
 
             OutlinedTextField(
                 value = password,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
                 onValueChange = {
                     password = it
                 },
@@ -282,10 +306,23 @@ fun FragmentRegister(
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .padding(top = 50.dp),
+            .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         item {
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Image(
+                painter = painterResource(id = R.drawable.ic_placeholder_male),
+                contentDescription = null,
+                modifier = Modifier
+                    .width(150.dp)
+                    .height(150.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 text = "Sign Up",
                 style = MaterialTheme.typography.headlineLarge,
@@ -299,6 +336,7 @@ fun FragmentRegister(
 
             OutlinedTextField(
                 value = email,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
                 onValueChange = {
                     email = it
                     emailError = !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -322,6 +360,7 @@ fun FragmentRegister(
 
             OutlinedTextField(
                 value = password,
+                shape = RoundedCornerShape(topEnd = 12.dp, bottomStart = 12.dp),
                 onValueChange = {
                     password = it
                 },
@@ -411,5 +450,18 @@ fun ProgressDialog(onDismiss: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun LoginPreview() {
+    TesteBudTheme {
+        FragmentLogin(
+            modifier = Modifier
+                .fillMaxSize(),
+            navController = rememberNavController(),
+            authViewModel = AuthViewModel()
+        )
     }
 }

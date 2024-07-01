@@ -67,7 +67,7 @@ fun SplashScreens() {
                     if (context is Activity) {
                         context.finish()
                     }
-                }, 500)
+                }, 1500)
             }
 
             is AuthState.Unauthenticated, is AuthState.Error -> {
@@ -76,7 +76,7 @@ fun SplashScreens() {
                     if (context is Activity) {
                         context.finish()
                     }
-                }, 500)
+                }, 1500)
             }
 
             else -> Unit
@@ -105,8 +105,8 @@ fun SplashScreens() {
                 text = stringResource(id = R.string.app_name),
                 fontWeight = FontWeight.Bold,
                 fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 50.sp,
+                style = MaterialTheme.typography.headlineLarge,
+                fontSize = 55.sp,
                 color = Color.White,
             )
             Spacer(modifier = Modifier.height(5.dp))
@@ -114,7 +114,8 @@ fun SplashScreens() {
                 text = stringResource(id = R.string.play_to_learn),
                 color = Color.White,
                 fontStyle = FontStyle.Italic,
-                style = MaterialTheme.typography.titleMedium,
+
+                style = MaterialTheme.typography.headlineLarge,
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
             )

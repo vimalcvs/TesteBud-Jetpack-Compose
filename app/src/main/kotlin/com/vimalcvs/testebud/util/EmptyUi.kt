@@ -15,7 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.viewmodel.ViewModelMain
@@ -36,7 +38,12 @@ fun NoNetworkView(viewModel: ViewModelMain) {
             contentDescription = "No Network",
             modifier = Modifier.size(110.dp)
         )
-        Text(text = "No Network Connection", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "No Network Connection",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(onClick = {
@@ -54,19 +61,6 @@ fun NoNetworkView(viewModel: ViewModelMain) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @Composable
 fun NoNetworkView(viewModel: ViewModelRoom) {
     Column(
@@ -81,7 +75,12 @@ fun NoNetworkView(viewModel: ViewModelRoom) {
             contentDescription = "No Network",
             modifier = Modifier.size(110.dp)
         )
-        Text(text = "No Network Connection", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "No Network Connection",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
         Spacer(modifier = Modifier.height(10.dp))
 
         Button(onClick = {
@@ -91,7 +90,6 @@ fun NoNetworkView(viewModel: ViewModelRoom) {
         }
     }
 }
-
 
 
 @Composable
@@ -108,7 +106,12 @@ fun EmptyView() {
             contentDescription = "No Data",
             modifier = Modifier.size(110.dp)
         )
-        Text(text = "No Data Available", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "No Data Available",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -116,13 +119,20 @@ fun EmptyView() {
 fun LoadingView() {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp),
+            .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+
+            strokeCap = StrokeCap.Round,
+        )
         Spacer(modifier = Modifier.height(14.dp))
-        Text(text = "Loading...", style = MaterialTheme.typography.bodyLarge)
+        Text(
+            text = "Loading...",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center,
+        )
     }
 }

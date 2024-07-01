@@ -47,6 +47,7 @@ import com.vimalcvs.testebud.util.EmptyView
 import com.vimalcvs.testebud.util.LoadingView
 import com.vimalcvs.testebud.util.NoNetworkView
 import com.vimalcvs.testebud.util.TopSlider
+import com.vimalcvs.testebud.view.activity.ActivityMore
 import com.vimalcvs.testebud.viewmodel.ViewModelMain
 
 
@@ -170,14 +171,14 @@ fun ListTitle(title: String) {
             text = title,
             style = MaterialTheme.typography.displayMedium,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.onSurface,
 
             modifier = Modifier
                 .weight(1f)
         )
 
         IconButton(onClick = {
-            val intent = Intent(context, ActivityDetail::class.java).apply {
+            val intent = Intent(context, ActivityMore::class.java).apply {
                 putExtra("itemName", title)
             }
             context.startActivity(intent)

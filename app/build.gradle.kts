@@ -57,8 +57,6 @@ android {
 
 
 dependencies {
-    implementation(libs.firebase.messaging.ktx)
-    implementation(libs.androidx.work.runtime.ktx)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.ui.test.junit4)
@@ -66,6 +64,10 @@ dependencies {
     annotationProcessor(libs.androidx.room.compiler)
     debugImplementation(libs.androidx.ui.test.manifest)
     debugImplementation(libs.androidx.ui.tooling)
+
+    implementation(libs.lottie.compose)
+
+
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -80,10 +82,12 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.coil.compose)
     implementation(libs.converter.gson)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.messaging.ktx)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.service)
     implementation(libs.lifecycle.viewmodel.ktx)
@@ -94,6 +98,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(platform(libs.androidx.compose.bom))
     ksp(libs.androidx.room.compiler)
-    testImplementation(libs.junit)
+
+
+
 
 }

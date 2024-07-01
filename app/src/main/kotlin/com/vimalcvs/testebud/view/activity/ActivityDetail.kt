@@ -5,20 +5,25 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.vimalcvs.testebud.model.ModelDetail
 import com.vimalcvs.testebud.theme.TesteBudTheme
+import com.vimalcvs.testebud.util.EmptyView
+import com.vimalcvs.testebud.util.LoadingView
+import com.vimalcvs.testebud.util.NoNetworkView
+import com.vimalcvs.testebud.viewmodel.ViewModelMain
 
 class ActivityDetail : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +32,9 @@ class ActivityDetail : ComponentActivity() {
         setContent {
             TesteBudTheme {
                 val itemName = intent.getStringExtra("itemName") ?: "No Name"
-                ItemDetailScreen(itemName)
+                val viewModel: ViewModelMain = viewModel()
+                viewModel.fetchDetail(itemName)
+                ItemDetailScreen(viewModel)
             }
         }
         ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
@@ -39,15 +46,42 @@ class ActivityDetail : ComponentActivity() {
 }
 
 @Composable
-fun ItemDetailScreen(itemName: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = itemName)
+fun ItemDetailScreen(viewModel: ViewModelMain) {
+    val detail by viewModel.detail.observeAsState(emptyList())
+    val isLoading by viewModel.isLoading.observeAsState(false)
+    val isEmpty by viewModel.isEmpty.observeAsState(false)
+    val isNoNetwork by viewModel.isNoNetwork.observeAsState(false)
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        when {
+            isLoading -> LoadingView()
+            isNoNetwork -> NoNetworkView(viewModel)
+            isEmpty -> EmptyView()
+            else -> {
+                if (detail.isNotEmpty()) {
+                    FragmentItemDetailScreen(model = detail[0])
+                } else {
+                    LoadingView()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun FragmentItemDetailScreen(model: ModelDetail) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        LazyColumn {
+            item {
+                Text(text = model.strCategory)
+                Text(text = model.strArea)
+                Text(text = model.strInstructions)
+            }
+            item {
+                Text(text = model.strMeal)
+                Text(text = model.strMealThumb)
+            }
+        }
     }
 }
 
@@ -55,6 +89,6 @@ fun ItemDetailScreen(itemName: String) {
 @Composable
 fun PreviewItemDetailScreen() {
     TesteBudTheme {
-        ItemDetailScreen(itemName = "Sample Item")
+        // ItemDetailScreen(itemName = "Sample Item")
     }
 }

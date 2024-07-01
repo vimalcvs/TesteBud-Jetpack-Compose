@@ -46,11 +46,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.database.Repository
+import com.vimalcvs.testebud.notification.FCMNotificationService
+import com.vimalcvs.testebud.theme.TesteBudTheme
 import com.vimalcvs.testebud.view.fragment.FragmentCategory
 import com.vimalcvs.testebud.view.fragment.FragmentFavorite
 import com.vimalcvs.testebud.view.fragment.FragmentHome
-import com.vimalcvs.testebud.notification.FCMNotificationService
-import com.vimalcvs.testebud.theme.TesteBudTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -105,7 +105,9 @@ class MainActivity : ComponentActivity() {
 fun MainScreen() {
     val navController = rememberNavController()
     Scaffold(
-        topBar = { Toolbar("TesteBud") },
+        topBar = {
+            Toolbar("TesteBud")
+        },
         bottomBar = { BottomNavigationBar(navController) }
     ) { innerPadding ->
         Column(
@@ -123,10 +125,8 @@ fun MainScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Toolbar(title: String) {
-
     val context = LocalContext.current
     val repository: Repository = Repository.getInstance(context)!!
-
     TopAppBar(
         title = {
             Text(

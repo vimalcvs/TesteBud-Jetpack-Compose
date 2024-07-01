@@ -19,7 +19,7 @@
         <activity
             android:name="com.vimalcvs.testebud.view.activity.ActivitySplash"
             android:exported="true"
-            android:theme="@style/Theme.TesteBud">
+            android:theme="@style/Theme.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,6 +33,7 @@
         <activity android:name="com.vimalcvs.testebud.view.activity.ActivityProfile" />
         <activity android:name="com.vimalcvs.testebud.view.activity.ActivitySearch" />
         <activity android:name="com.vimalcvs.testebud.view.activity.ActivityNotification" />
+        <activity android:name="com.vimalcvs.testebud.view.activity.ActivityMore" />
 
 
         <meta-data
