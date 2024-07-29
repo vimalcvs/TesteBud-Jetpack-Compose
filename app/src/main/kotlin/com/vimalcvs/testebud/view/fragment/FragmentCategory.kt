@@ -1,6 +1,6 @@
 package com.vimalcvs.testebud.view.fragment
 
-import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,32 +30,36 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.gson.Gson
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.model.ModelCategory
 import com.vimalcvs.testebud.theme.TesteBudTheme
-import com.vimalcvs.testebud.view.activity.ActivityDetail
 import com.vimalcvs.testebud.util.EmptyView
 import com.vimalcvs.testebud.util.LoadingView
 import com.vimalcvs.testebud.util.NoNetworkView
 import com.vimalcvs.testebud.viewmodel.ViewModelRoom
 
 @Composable
-fun FragmentCategory(modifier: Modifier = Modifier) {
+fun FragmentCategory(
+    modifier: Modifier = Modifier,
+    viewModel: ViewModelRoom = viewModel(),
+    navController: NavController
+) {
     Column(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FragmentCategoryScreen()
+        FragmentCategoryScreen(viewModel = viewModel, navController = navController)
     }
 }
 
 @Composable
-fun FragmentCategoryScreen() {
-    val viewModel: ViewModelRoom = viewModel()
+fun FragmentCategoryScreen(viewModel: ViewModelRoom, navController: NavController) {
     val vegetarian by viewModel.categories.observeAsState(emptyList())
     val isLoading by viewModel.isLoading.observeAsState(false)
     val isEmpty by viewModel.isEmpty.observeAsState(false)
@@ -73,7 +77,7 @@ fun FragmentCategoryScreen() {
                     contentPadding = PaddingValues(4.dp)
                 ) {
                     items(vegetarian) { item ->
-                        ListItemCategory(item = item)
+                        ListItemCategory(item = item, navController = navController)
                     }
                     item {
                         Spacer(modifier = Modifier.height(60.dp))
@@ -85,18 +89,17 @@ fun FragmentCategoryScreen() {
 }
 
 @Composable
-fun ListItemCategory(item: ModelCategory) {
+fun ListItemCategory(item: ModelCategory, navController: NavController) {
     val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .padding(3.dp)
             .fillMaxSize()
             .clip(shape = RoundedCornerShape(18.dp))
             .clickable {
-                val intent = Intent(context, ActivityDetail::class.java).apply {
-                    putExtra("itemName", item.strCategoryDescription)
-                }
-                context.startActivity(intent)
+                val categoryJson = Uri.encode(Gson().toJson(item))
+                navController.navigate("category/$categoryJson")
             }
     ) {
         Card(
@@ -130,18 +133,3 @@ fun ListItemCategory(item: ModelCategory) {
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun FragmentCategoryPreview() {
-    TesteBudTheme {
-        ListItemCategory(
-            item = ModelCategory(
-                "1",
-                "strCategory",
-                "strCategoryDescription",
-                "strCategoryThumb"
-            )
-        )
-    }
-}

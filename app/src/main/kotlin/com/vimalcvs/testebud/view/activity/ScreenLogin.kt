@@ -1,12 +1,6 @@
 package com.vimalcvs.testebud.view.activity
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,7 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -49,49 +42,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.vimalcvs.testebud.R
-import com.vimalcvs.testebud.theme.TesteBudTheme
-import com.vimalcvs.testebud.util.NavigationHost
 import com.vimalcvs.testebud.viewmodel.AuthState
 import com.vimalcvs.testebud.viewmodel.AuthViewModel
 
-class ActivityLogin : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            TesteBudTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    NavigationHost(modifier = Modifier.padding(innerPadding))
-                }
-            }
-        }
-        ViewCompat.setOnApplyWindowInsetsListener(window.decorView) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(bottom = systemBars.bottom)
-            insets
-        }
-    }
-}
-
-
 @Composable
-fun FragmentLogin(
-    modifier: Modifier = Modifier,
+fun LoginScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-
-
     var email by remember {
         mutableStateOf("demo@demo.com")
     }
@@ -119,9 +82,13 @@ fun FragmentLogin(
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
-                context.startActivity(Intent(context, MainActivity::class.java))
-                if (context is Activity) {
-                    context.finish()
+                navController.navigate("home") {
+                    popUpTo("register") {
+                        inclusive = true
+                    }
+                    popUpTo("login") {
+                        inclusive = true
+                    }
                 }
             }
 
@@ -138,7 +105,7 @@ fun FragmentLogin(
     }
 
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -240,7 +207,12 @@ fun FragmentLogin(
             Spacer(modifier = Modifier.height(8.dp))
 
             TextButton(onClick = {
-                navController.navigate("signup")
+                navController.navigate("register") {
+                    popUpTo("login") {
+                        inclusive = true
+                    }
+                }
+
             }) {
                 Text(text = "Don't have an account, Signup")
             }
@@ -254,8 +226,7 @@ fun FragmentLogin(
 
 
 @Composable
-fun FragmentRegister(
-    modifier: Modifier = Modifier,
+fun RegisterScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
@@ -285,9 +256,13 @@ fun FragmentRegister(
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
-                context.startActivity(Intent(context, MainActivity::class.java))
-                if (context is Activity) {
-                    context.finish()
+                navController.navigate("home") {
+                    popUpTo("register") {
+                        inclusive = true
+                    }
+                    popUpTo("login") {
+                        inclusive = true
+                    }
                 }
             }
 
@@ -304,7 +279,8 @@ fun FragmentRegister(
     }
 
     LazyColumn(
-        modifier = modifier
+        modifier = Modifier
+            .fillMaxSize()
             .fillMaxSize()
             .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -409,7 +385,11 @@ fun FragmentRegister(
             Spacer(modifier = Modifier.height(8.dp))
 
             TextButton(onClick = {
-                navController.navigate("login")
+                navController.navigate("login") {
+                    popUpTo("register") {
+                        inclusive = true
+                    }
+                }
             }) {
                 Text(text = "Already have an account, Login")
             }
@@ -450,18 +430,5 @@ fun ProgressDialog(onDismiss: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginPreview() {
-    TesteBudTheme {
-        FragmentLogin(
-            modifier = Modifier
-                .fillMaxSize(),
-            navController = rememberNavController(),
-            authViewModel = AuthViewModel()
-        )
     }
 }

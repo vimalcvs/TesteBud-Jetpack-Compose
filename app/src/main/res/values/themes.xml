@@ -4,18 +4,18 @@
     <style name="Theme.TesteBud" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar" />
 
 
+
+
     <style name="Theme.Splash" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="s">500</item>
         <item name="android:windowSplashScreenBackground" tools:targetApi="s">?android:colorPrimary
         </item>
-
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">
             @drawable/ic_launcher_foreground
         </item>
         <item name="android:windowBackground">@drawable/shape_splash_cover</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-
     </style>
 
 </resources>

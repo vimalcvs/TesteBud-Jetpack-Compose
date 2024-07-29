@@ -4,7 +4,6 @@ package com.vimalcvs.testebud.view.activity
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -37,8 +36,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.widget.StateSet.TAG
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,14 +46,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.database.Repository
-import com.vimalcvs.testebud.notification.FCMNotificationService
 import com.vimalcvs.testebud.theme.TesteBudTheme
+import com.vimalcvs.testebud.util.NavigationHost
 import com.vimalcvs.testebud.view.fragment.FragmentCategory
 import com.vimalcvs.testebud.view.fragment.FragmentFavorite
 import com.vimalcvs.testebud.view.fragment.FragmentHome
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.vimalcvs.testebud.viewmodel.ViewModelMain
+import com.vimalcvs.testebud.viewmodel.ViewModelRoom
 
 class MainActivity : ComponentActivity() {
 
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TesteBudTheme {
-                MainScreen()
+                NavigationHost()
             }
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -102,13 +101,13 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen() {
-    val navController = rememberNavController()
+fun MainScreen(navController: NavHostController) {
+    val navControllerBottom = rememberNavController()
     Scaffold(
         topBar = {
-            Toolbar("TesteBud")
+            Toolbar("TesteBud", navController)
         },
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar(navControllerBottom) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -117,14 +116,14 @@ fun MainScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            NavigationGraph(navController)
+            NavigationGraph(navController, navControllerBottom)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Toolbar(title: String) {
+fun Toolbar(title: String, navController: NavController) {
     val context = LocalContext.current
     val repository: Repository = Repository.getInstance(context)!!
     TopAppBar(
@@ -138,26 +137,22 @@ fun Toolbar(title: String) {
         },
         actions = {
             IconButton(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    try {
-                        repository.deleteAllNotification()
-                    } catch (e: Exception) {
-                        Log.e(
-                            FCMNotificationService.TAG,
-                            "Error inserting notification: ${e.message}"
-                        )
-                    }
+                navController.navigate("search") {
+
                 }
             }) {
                 Icon(Icons.Outlined.Search, contentDescription = "More")
             }
             IconButton(onClick = {
-                context.startActivity(Intent(context, ActivityNotification::class.java))
+
+                navController.navigate("notification") {
+
+                }
             }) {
                 Icon(Icons.Outlined.Notifications, contentDescription = "More")
             }
             IconButton(onClick = {
-                context.startActivity(Intent(context, ActivityNotification::class.java))
+
             }) {
                 Icon(Icons.Outlined.MoreVert, contentDescription = "More")
             }
@@ -168,16 +163,16 @@ fun Toolbar(title: String) {
 }
 
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(navController: NavController) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry.value?.destination?.route
     NavigationBar {
         NavigationBarItem(
             icon = { Icon(Icons.Rounded.Home, contentDescription = "Home") },
             label = { Text("Home") },
-            selected = currentDestination == "home",
+            selected = currentDestination == "fragmentHome",
             onClick = {
-                navController.navigate("home") {
+                navController.navigate("fragmentHome") {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }
@@ -190,9 +185,9 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             icon = { Icon(Icons.Rounded.Category, contentDescription = "Category") },
             label = { Text("Category") },
-            selected = currentDestination == "category",
+            selected = currentDestination == "fragmentCategory",
             onClick = {
-                navController.navigate("category") {
+                navController.navigate("fragmentCategory") {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }
@@ -205,9 +200,9 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationBarItem(
             icon = { Icon(Icons.Rounded.Favorite, contentDescription = "Favorites") },
             label = { Text("Favorites") },
-            selected = currentDestination == "favorite",
+            selected = currentDestination == "fragmentFavorite",
             onClick = {
-                navController.navigate("favorite") {
+                navController.navigate("fragmentFavorite") {
                     popUpTo(navController.graph.startDestinationId) {
                         saveState = true
                     }
@@ -220,20 +215,30 @@ fun BottomNavigationBar(navController: NavHostController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    TesteBudTheme {
-        MainScreen()
-    }
-}
 
 @Composable
-fun NavigationGraph(navController: NavHostController) {
-    NavHost(navController, startDestination = "home") {
-        composable("home") { FragmentHome() }
-        composable("category") { FragmentCategory() }
-        composable("favorite") { FragmentFavorite() }
+fun NavigationGraph(navController: NavHostController, navControllerBottom: NavHostController) {
+    val mainViewModel: ViewModelMain = viewModel()
+    val roomViewModel: ViewModelRoom = viewModel()
+    NavHost(navControllerBottom, startDestination = "fragmentHome") {
+        composable("fragmentHome") {
+            FragmentHome(
+                viewModel = mainViewModel,
+                navController = navController
+            )
+        }
+        composable("fragmentCategory") {
+            FragmentCategory(
+                viewModel = roomViewModel,
+                navController = navController
+            )
+        }
+        composable("fragmentFavorite") {
+            FragmentFavorite(
+                viewModel = roomViewModel,
+                navController = navController
+            )
+        }
     }
 }
 

@@ -4,20 +4,18 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.compose.compiler)
-
+    id("kotlin-parcelize")
 }
 
 android {
     namespace = "com.vimalcvs.testebud"
     compileSdk = 35
-
     defaultConfig {
         applicationId = "com.vimalcvs.testebud"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -66,8 +64,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
 
     implementation(libs.lottie.compose)
-
-
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -98,8 +94,5 @@ dependencies {
     implementation(libs.retrofit)
     implementation(platform(libs.androidx.compose.bom))
     ksp(libs.androidx.room.compiler)
-
-
-
 
 }

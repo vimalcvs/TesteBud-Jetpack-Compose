@@ -1,4 +1,4 @@
-package com.vimalcvs.testebud.view.fragment
+package com.vimalcvs.testebud.view.activity
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -31,10 +31,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -46,7 +44,6 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.vimalcvs.testebud.R
-import com.vimalcvs.testebud.theme.TesteBudTheme
 
 @Immutable
 class BottomEndRoundedShape(private val radius: Float) : Shape {
@@ -79,9 +76,8 @@ class BottomEndRoundedShape(private val radius: Float) : Shape {
 }
 
 @Composable
-fun FragmentBoardingOne(
-
-    navController: NavController
+fun BoardingOneScreen(
+    navController: NavController = rememberNavController()
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -158,19 +154,25 @@ fun FragmentBoardingOne(
         }
 
         Button(
-            onClick = { navController.navigate("boardingTwo") },
+            onClick = {
+                navController.navigate("boardingTwo") {
+                    popUpTo("boardingOne") { inclusive = true }
+                }
+
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 30.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+
             ) {
                 Text(
-                    text = "Get Started",
+                    text = "Started",
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.titleMedium,
@@ -182,14 +184,16 @@ fun FragmentBoardingOne(
                 WelcomeArrowAnimation()
             }
         }
+
     }
 }
 
 
 @Composable
-fun FragmentBoardingTwo(
+fun BoardingTwoScreen(
 
-    navController: NavController
+
+    navController: NavController = rememberNavController()
 ) {
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
@@ -264,10 +268,14 @@ fun FragmentBoardingTwo(
             }
         }
         Button(
-            onClick = { navController.navigate("boardingThree") },
+            onClick = {
+                navController.navigate("boardingThree") {
+                    popUpTo("boardingTwo") { inclusive = true }
+                }
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 30.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
@@ -293,11 +301,9 @@ fun FragmentBoardingTwo(
 
 
 @Composable
-fun FragmentBoardingThree(
-    navController: NavController
+fun BoardingThreeScreen(
+    navController: NavController = rememberNavController()
 ) {
-
-
     val configuration = LocalConfiguration.current
     val screenHeight = configuration.screenHeightDp.dp
     val screenWidth = configuration.screenWidthDp.dp
@@ -374,14 +380,12 @@ fun FragmentBoardingThree(
         Button(
             onClick = {
                 navController.navigate("login") {
-                    popUpTo(navController.graph.startDestinationId) {
-                        inclusive = true
-                    }
+                    popUpTo("boardingThree") { inclusive = true }
                 }
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(16.dp)
+                .padding(start = 16.dp, end = 16.dp, bottom = 30.dp)
                 .width(screenWidth * 0.85f)
                 .height(50.dp)
         ) {
@@ -427,12 +431,3 @@ fun WelcomeArrowAnimation() {
         )
     }
 }
-
-@Preview
-@Composable
-fun FragmentBoardingPreview() {
-    TesteBudTheme {
-        FragmentBoardingThree(navController = rememberNavController())
-    }
-}
-

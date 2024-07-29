@@ -1,5 +1,4 @@
 <resources>
-
     <color name="color_accent">#FF6D00</color>
     <color name="color_background">#000000</color>
     <color name="color_button_active">#7E9AFF</color>
@@ -21,5 +20,4 @@
     <color name="text_primary">#FFFFFF</color>
     <color name="text_secondary">#BFFFFFFF</color>
     <color name="text_third">#80FFFFFF</color>
-
 </resources>

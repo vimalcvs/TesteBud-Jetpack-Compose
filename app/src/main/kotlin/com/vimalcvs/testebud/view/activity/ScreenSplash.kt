@@ -1,13 +1,7 @@
 package com.vimalcvs.testebud.view.activity
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,54 +21,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.vimalcvs.testebud.R
-import com.vimalcvs.testebud.theme.TesteBudTheme
 import com.vimalcvs.testebud.viewmodel.AuthState
 import com.vimalcvs.testebud.viewmodel.AuthViewModel
 
-class ActivitySplash : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            TesteBudTheme {
-                SplashScreens()
-            }
-        }
-    }
-}
 
 @Composable
-fun SplashScreens() {
-    val authViewModel: AuthViewModel = viewModel()
+fun SplashScreens(
+    navController: NavController,
+    authViewModel: AuthViewModel
+) {
+
     val authState = authViewModel.authState.observeAsState()
-    val context = LocalContext.current
 
     LaunchedEffect(authState.value) {
         when (authState.value) {
             is AuthState.Authenticated -> {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    context.startActivity(Intent(context, MainActivity::class.java))
-                    if (context is Activity) {
-                        context.finish()
+                    navController.navigate("home") {
+                        popUpTo("splash") { inclusive = true }
                     }
                 }, 1500)
             }
 
             is AuthState.Unauthenticated, is AuthState.Error -> {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    context.startActivity(Intent(context, ActivityLogin::class.java))
-                    if (context is Activity) {
-                        context.finish()
+                    navController.navigate("boardingOne") {
+                        popUpTo("splash") { inclusive = true }
                     }
                 }, 1500)
             }
@@ -86,8 +66,7 @@ fun SplashScreens() {
 
 
     Box(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Image(
             painter = painterResource(id = R.drawable.shape_splash_cover),
@@ -129,13 +108,5 @@ fun SplashScreens() {
             )
             Spacer(modifier = Modifier.height(30.dp))
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SplashPreview() {
-    TesteBudTheme {
-        SplashScreens()
     }
 }

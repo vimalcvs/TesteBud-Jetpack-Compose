@@ -1,6 +1,6 @@
 package com.vimalcvs.testebud.view.fragment
 
-import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,31 +29,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.gson.Gson
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.model.ModelCategory
 import com.vimalcvs.testebud.model.ModelMeal
 import com.vimalcvs.testebud.theme.TesteBudTheme
-import com.vimalcvs.testebud.view.activity.ActivityDetail
 import com.vimalcvs.testebud.util.EmptyView
 import com.vimalcvs.testebud.viewmodel.ViewModelRoom
 
 @Composable
-fun FragmentFavorite(modifier: Modifier = Modifier) {
+fun FragmentFavorite(
+    modifier: Modifier = Modifier,
+    viewModel: ViewModelRoom = viewModel(),
+    navController: NavController
+) {
     Column(
         modifier = modifier
             .fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FragmentFavoriteScreen()
+        FragmentFavoriteScreen(viewModel = viewModel, navController = navController)
     }
 }
 
 @Composable
-fun FragmentFavoriteScreen() {
-    val viewModel: ViewModelRoom = viewModel()
+fun FragmentFavoriteScreen(viewModel: ViewModelRoom, navController: NavController) {
     val vegetarian by viewModel.allFavorite.observeAsState(emptyList())
     val isEmpty by viewModel.isEmptyFavorite.observeAsState(false)
 
@@ -67,7 +71,7 @@ fun FragmentFavoriteScreen() {
                     contentPadding = PaddingValues(4.dp)
                 ) {
                     items(vegetarian) { item ->
-                        ListItemFavorite(item = item)
+                        ListItemFavorite(item = item, navController = navController)
                     }
                     item {
                         Spacer(modifier = Modifier.height(60.dp))
@@ -79,7 +83,7 @@ fun FragmentFavoriteScreen() {
 }
 
 @Composable
-fun ListItemFavorite(item: ModelMeal) {
+fun ListItemFavorite(item: ModelMeal, navController: NavController) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -90,10 +94,8 @@ fun ListItemFavorite(item: ModelMeal) {
             modifier = Modifier
                 .aspectRatio(1f)
                 .clickable {
-                    val intent = Intent(context, ActivityDetail::class.java).apply {
-                        putExtra("itemName", item.idMeal)
-                    }
-                    context.startActivity(intent)
+                    val detailJson = Uri.encode(Gson().toJson(item))
+                    navController.navigate("detail/$detailJson")
                 }
         ) {
             AsyncImage(
@@ -118,22 +120,6 @@ fun ListItemFavorite(item: ModelMeal) {
             modifier = Modifier
                 .padding(0.dp, 10.dp, 0.dp, 0.dp)
                 .fillMaxSize()
-        )
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun FragmentFavoritePreview() {
-    TesteBudTheme {
-        ListItemCategory(
-            item = ModelCategory(
-                "1",
-                "strCategory",
-                "strCategoryDescription",
-                "strCategoryThumb"
-            )
         )
     }
 }

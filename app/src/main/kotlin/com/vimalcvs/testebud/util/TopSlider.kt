@@ -43,6 +43,7 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TopSlider(
+    modifier: Modifier = Modifier,
     result: List<ModelMeal>,
     context: Context
 ) {
@@ -147,8 +148,8 @@ fun TopSliderItem(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun DotsIndicator(
-    pagerState: PagerState,
     modifier: Modifier = Modifier,
+    pagerState: PagerState,
     dotSize: Dp = 8.dp,
     selectedDotColor: Color = MaterialTheme.colorScheme.primary,
     unselectedDotColor: Color = MaterialTheme.colorScheme.primaryContainer,

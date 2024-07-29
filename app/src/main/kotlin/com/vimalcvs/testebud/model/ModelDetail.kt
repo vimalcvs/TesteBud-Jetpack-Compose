@@ -1,5 +1,9 @@
 package com.vimalcvs.testebud.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class ModelDetail(
     val dateModified: String,
     val idMeal: String,
@@ -55,4 +59,4 @@ data class ModelDetail(
     val strSource: String,
     val strTags: String,
     val strYoutube: String
-)
+) : Parcelable

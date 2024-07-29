@@ -1,6 +1,6 @@
 package com.vimalcvs.testebud.view.fragment
 
-import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,38 +34,40 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.google.gson.Gson
 import com.vimalcvs.testebud.R
 import com.vimalcvs.testebud.model.ModelCategory
 import com.vimalcvs.testebud.model.ModelMeal
-import com.vimalcvs.testebud.view.activity.ActivityDetail
 import com.vimalcvs.testebud.util.EmptyView
 import com.vimalcvs.testebud.util.LoadingView
 import com.vimalcvs.testebud.util.NoNetworkView
 import com.vimalcvs.testebud.util.TopSlider
-import com.vimalcvs.testebud.view.activity.ActivityMore
 import com.vimalcvs.testebud.viewmodel.ViewModelMain
 
 
 @Composable
-fun FragmentHome(modifier: Modifier = Modifier) {
+fun FragmentHome(
+    modifier: Modifier = Modifier,
+    viewModel: ViewModelMain = viewModel(),
+    navController: NavController
+) {
     Column(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        FragmentHomeScreen()
+        FragmentHomeScreen(viewModel = viewModel, navController = navController)
     }
 }
 
 @Composable
-fun FragmentHomeScreen() {
-    val viewModel: ViewModelMain = viewModel()
+fun FragmentHomeScreen(viewModel: ViewModelMain, navController: NavController) {
+
     val breakfast by viewModel.breakfast.observeAsState(emptyList())
     val lamb by viewModel.lamb.observeAsState(emptyList())
     val pasta by viewModel.pasta.observeAsState(emptyList())
@@ -93,60 +95,60 @@ fun FragmentHomeScreen() {
                         Spacer(modifier = Modifier.height(10.dp))
                         LazyRow(modifier = Modifier.fillMaxWidth()) {
                             items(category) { item ->
-                                ListItemCategorySmall(item = item)
+                                ListItemCategorySmall(item = item, navController = navController)
                             }
                         }
                     }
                     item {
-                        ListTitle(title = "Breakfast")
+                        ListTitle(title = "Breakfast", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(breakfast) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                     }
 
                     item {
-                        ListTitle(title = "Lamb")
+                        ListTitle(title = "Lamb", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(lamb) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                     }
 
                     item {
-                        ListTitle(title = "Pasta")
+                        ListTitle(title = "Pasta", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(pasta) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                     }
 
                     item {
-                        ListTitle(title = "Pork")
+                        ListTitle(title = "Pork", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(pork) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                     }
 
                     item {
-                        ListTitle(title = "Side")
+                        ListTitle(title = "Side", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(side) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                     }
 
                     item {
-                        ListTitle(title = "Vegetarian")
+                        ListTitle(title = "Vegetarian", navController = navController)
                         LazyRow(modifier = Modifier.fillMaxSize()) {
                             items(vegetarian) { item ->
-                                ListItemMeal(item = item)
+                                ListItemMeal(item = item, navController = navController)
                             }
                         }
                         Spacer(modifier = Modifier.height(60.dp))
@@ -159,8 +161,8 @@ fun FragmentHomeScreen() {
 
 
 @Composable
-fun ListTitle(title: String) {
-    val context = LocalContext.current
+fun ListTitle(title: String, navController: NavController) {
+    val modelMain = ModelCategory(title, title, title, title)
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -173,21 +175,17 @@ fun ListTitle(title: String) {
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
 
-            modifier = Modifier
-                .weight(1f)
+            modifier = Modifier.weight(1f)
         )
 
         IconButton(onClick = {
-            val intent = Intent(context, ActivityMore::class.java).apply {
-                putExtra("itemName", title)
-            }
-            context.startActivity(intent)
+            val categoryJson = Uri.encode(Gson().toJson(modelMain))
+            navController.navigate("category/$categoryJson")
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_arrow_more),
                 contentDescription = "Search",
-                modifier = Modifier
-                    .size(24.dp),
+                modifier = Modifier.size(24.dp),
                 tint = MaterialTheme.colorScheme.onPrimaryContainer
             )
 
@@ -196,7 +194,7 @@ fun ListTitle(title: String) {
 }
 
 @Composable
-fun ListItemMeal(item: ModelMeal) {
+fun ListItemMeal(item: ModelMeal, navController: NavController) {
     val context = LocalContext.current
     Column(
         modifier = Modifier
@@ -204,12 +202,9 @@ fun ListItemMeal(item: ModelMeal) {
             .fillMaxSize()
             .clip(shape = RoundedCornerShape(18.dp))
             .clickable {
-                val intent = Intent(context, ActivityDetail::class.java).apply {
-                    putExtra("itemName", item.idMeal.toString())
-                }
-                context.startActivity(intent)
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
+                val detailJson = Uri.encode(Gson().toJson(item))
+                navController.navigate("detail/$detailJson")
+            }, horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -220,12 +215,10 @@ fun ListItemMeal(item: ModelMeal) {
                 .padding(3.dp)
         ) {
             AsyncImage(
-                model = ImageRequest.Builder(context = context)
-                    .data(item.strMealThumb)
-                    .crossfade(enable = true)
-                    .placeholder(R.drawable.ic_placeholder)
-                    .error(R.drawable.ic_placeholder)
-                    .build(), contentDescription = null,
+                model = ImageRequest.Builder(context = context).data(item.strMealThumb)
+                    .crossfade(enable = true).placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_placeholder).build(),
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
                     .clip(shape = RoundedCornerShape(16.dp)),
@@ -253,23 +246,18 @@ fun ListItemMeal(item: ModelMeal) {
 
 
 @Composable
-fun ListItemCategorySmall(item: ModelCategory) {
-    val context = LocalContext.current
+fun ListItemCategorySmall(item: ModelCategory, navController: NavController) {
     Card(
         modifier = Modifier
             .padding(start = 8.dp)
             .clip(shape = RoundedCornerShape(18.dp))
             .clickable {
-                val intent = Intent(context, ActivityDetail::class.java).apply {
-                    putExtra("itemName", item.idCategory)
-                }
-                context.startActivity(intent)
-            },
-        shape = RoundedCornerShape(18.dp)
+                val categoryJson = Uri.encode(Gson().toJson(item))
+                navController.navigate("category/$categoryJson")
+            }, shape = RoundedCornerShape(18.dp)
     ) {
         Box(
-            modifier = Modifier
-                .padding(top = 3.dp, bottom = 3.dp, start = 10.dp, end = 10.dp)
+            modifier = Modifier.padding(top = 3.dp, bottom = 3.dp, start = 10.dp, end = 10.dp)
         ) {
             Text(
                 text = item.strCategory,
@@ -285,14 +273,3 @@ fun ListItemCategorySmall(item: ModelCategory) {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun FragmentHomePosterScreenPreview() {
-    ListItemMeal(
-        item = ModelMeal(
-            1,
-            "strCategory",
-            "strCategoryThumb"
-        )
-    )
-}

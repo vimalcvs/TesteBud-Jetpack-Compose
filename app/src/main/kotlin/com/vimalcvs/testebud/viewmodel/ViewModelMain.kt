@@ -1,6 +1,7 @@
 package com.vimalcvs.testebud.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -111,16 +112,18 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
         }
     }
 
+
     fun fetchSearch(search: String) {
         _isLoading.value = true
         _isNoNetwork.value = false
         _isEmpty.value = false
-
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val response = apiService.getSearch(search)
                 if (response.isSuccessful) {
-                    if (response.body()?.meals.isNullOrEmpty()) {
+                    val meals = response.body()?.meals
+                    Log.d("ViewModelMain", "Search response: $meals")
+                    if (meals.isNullOrEmpty()) {
                         _isEmpty.postValue(true)
                     } else {
                         _search.postValue(response.body()?.meals)
@@ -135,7 +138,6 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
 
     init {
         fetchBreakfast()
@@ -199,23 +201,6 @@ class ViewModelMain(application: Application) : AndroidViewModel(application) {
     fun fetchSlider() {
         fetchMeals("Starter", _slider)
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     init {
